@@ -1,0 +1,9 @@
+type Query {
+  # # hello
+  # request for hello resource
+  hello: String
+}
+
+type Mutation {
+  submitan(s: String!): String
+}
