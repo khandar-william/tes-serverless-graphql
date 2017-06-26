@@ -73,10 +73,6 @@ function createVideoUrl(url) {
   return `https://video1.break.com/dnet/media/${lastHalf}/${firstHalf}/${number}/${title}-3264_kbps.mp4?1B608EE7AFCE3765E176F3C6FBB98002B3D18C64572F2307D769A572A676F3BDF079?1B608EE7AFCE3765E176F3C6FBB98002B3D18C64572F2307D769A572A676F2B9C30A`;
 }
 
-module.exports.tes = () => {
-  console.log(createVideoUrl("http://www.screenjunkies.com/video/grease-lives-kether-donohue-on-mundy-night-raw-3018787"));
-}
-
 module.exports.crawl = (event, context, callback) => {
   var urlNow;
   var queuesNow;
@@ -129,4 +125,26 @@ module.exports.initQueue = (event, context, callback) => {
     });
     crawledDb.setQueues(result).then(() => { console.log('Queue count: ' + result.length); });
   }));
+};
+
+const configuraDb = require('./dynamo/configura');
+
+module.exports.configura = (event, context, callback) => {
+  var command = event;
+  console.log('Body is ' + command);
+
+  var parsed;
+  if (parsed = command.match(/^get:([^:]+)$/)) {
+    var configKey = parsed[1];
+    configuraDb.getConfig(configKey)
+      .then((val) => callback(null, val));
+  } else if (parsed = command.match(/^set:([^:]+):([^:]+)$/)) {
+    var configKey = parsed[1];
+    var configVal = parsed[2];
+    configuraDb.setConfig(configKey, configVal)
+      .then(() => callback(null, configKey + ' = ' + configVal));
+  } else {
+    console.error('Command unrecognized');
+    callback(new Error('Command unrecognized'));
+  }
 };

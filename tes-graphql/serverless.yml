@@ -45,8 +45,8 @@ functions:
           enabled: false
   initQueue:
     handler: handler.initQueue
-  tes:
-    handler: handler.tes
+  configura:
+    handler: handler.configura
 
 resources:
   Resources:
@@ -89,9 +89,23 @@ resources:
           - AttributeName: id
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 2
-          WriteCapacityUnits: 2
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
         TableName: 'crawled'
+    ConfiguraDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: 'configura'
 
 plugins:
   - serverless-plugin-graphiql
