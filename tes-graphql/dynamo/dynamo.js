@@ -1,9 +1,6 @@
-console.log('start dynamo');
 const AWS = require('aws-sdk');
-console.log('after aws-sdk');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
-console.log('after dynamoDB');
 
 module.exports.scan = function (params) {
   return new Promise((resolve, reject) => {

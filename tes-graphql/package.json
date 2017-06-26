@@ -10,9 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.77.0",
+    "cheerio": "^1.0.0-rc.1",
     "graphql": "^0.10.3",
     "graphql-tools": "^1.0.0",
+    "request": "^2.81.0",
     "serverless-plugin-graphiql": "^0.3.0",
+    "url-parse": "^1.1.9",
     "uuid": "^3.0.1"
   }
 }

@@ -1,8 +1,5 @@
-console.log('songs start');
 const uuid = require('uuid/v1');
-console.log('after uuid');
 const db = require('./dynamo');
-console.log('after db');
 
 const TableName = 'songs';
 
