@@ -1,0 +1,23 @@
+type Gold {
+  id: ID!
+  miner: Miner
+  amount: Int
+}
+
+type Miner {
+  name: String
+  wealth: Int
+  golds: [Gold]
+}
+
+type Query {
+  golds: [Gold]
+  miners: [Miner]
+  miner(name: String!): Miner
+}
+
+type Mutation {
+  mineGold(
+    amount: Int!
+  ): Gold
+}

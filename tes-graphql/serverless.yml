@@ -47,6 +47,13 @@ functions:
     handler: handler.initQueue
   configura:
     handler: handler.configura
+  gold:
+    handler: gold/handler.graphql
+    events:
+      - http:
+          path: gold
+          method: post
+          cors: true
 
 resources:
   Resources:
@@ -106,6 +113,34 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: 'configura'
+    GoldsDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: 'golds'
+    MinersDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: name
+            AttributeType: S
+        KeySchema:
+          - AttributeName: name
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: 'miners'
 
 plugins:
-  - serverless-plugin-graphiql
+  - serverless-offline
