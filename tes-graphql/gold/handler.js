@@ -2,6 +2,8 @@
 
 const fs = require('fs');
 const path = require('path');
+const { StringDecoder } = require('string_decoder');
+const decoder = new StringDecoder('utf8');
 
 var g = require('graphql');
 var graphql = g.graphql;
@@ -15,6 +17,21 @@ var maybeJson = str => {
   }
 };
 
+var getSecret = (headerValue) => {
+  var kode = headerValue.match(/Basic (.+)$/);
+  kode = kode[1];
+  var buf = Buffer.from(kode, 'base64');
+  var decoded = decoder.write(buf);
+  kode = decoded.match(/^(.+):(.+)$/);
+  if (kode.length == 3) {
+    var part1 = kode[1];
+    var part2 = kode[2];
+    return (part1 == part2) ? part1 : null;
+  } else {
+    return null;
+  }
+};
+
 const makeExecutableSchema = require('graphql-tools').makeExecutableSchema;
 const typeDefs = fs.readFileSync(path.resolve(__dirname, 'gold.graphql'), 'utf-8');
 const resolvers = require('./gold.resolvers');
@@ -24,12 +41,19 @@ const schema = makeExecutableSchema({
 });
 
 module.exports.graphql = (event, context, callback) => {
-  // @todo check header 
+  
+  if (!event || !event.headers || !event.headers.Authorization) {
+    return callback('Harus Pakai Kode Rahasia');
+  }
 
+  var minerName = getSecret(event.headers.Authorization);
+  if (!minerName) {
+    return callback('Harus Pakai Kode Rahasia');
+  } 
   var payload = maybeJson(event.body);
   var requestString = payload[Object.keys(payload)[0]]; // query, mutation ...
   
-  graphql(schema, requestString, null, {miner: 'Saint Of Killers'})
+  graphql(schema, requestString, null, {miner: minerName})
     .then(body => callback(null, {
       headers: { 
         'Content-Type': 'application/json',
