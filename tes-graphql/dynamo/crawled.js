@@ -55,3 +55,19 @@ module.exports.getShows = function () {
 
   return db.get(params).then(item => item ? item.content : []);
 };
+
+module.exports.listShows = function (limit, page) {
+  return module.exports.getShows()
+  .then((shows) => {
+    var idxStart = (page - 1) * limit;
+    var idxEnd = page * limit;
+    return shows.slice(idxStart, idxEnd).map((show, idx) => {
+      return {
+        id: idx + idxStart,
+        title: show.title,
+        url: show.url,
+        video: show.video,
+      };
+    });
+  });
+};

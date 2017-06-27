@@ -1,5 +1,6 @@
 const dbSongs = require('./dynamo/songs');
 const dbArtists = require('./dynamo/artists');
+const dbCrawled = require('./dynamo/crawled');
 
 const resolvers = {
   Query: {
@@ -7,6 +8,7 @@ const resolvers = {
     artist: (_, args) => dbArtists.getArtistById(args.id),
     songs: () => dbSongs.getSongs(),
     song: (_, args) => dbSongs.getSongById(args.id),
+    shows: (_, args) => dbCrawled.listShows(args.limit, args.page),
   },
   Mutation: {
     createArtist: (_, args) => dbArtists.createArtist(args),

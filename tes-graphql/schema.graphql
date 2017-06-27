@@ -12,11 +12,19 @@ type Song {
   duration: Int
 }
 
+type Show {
+  id: ID!
+  title: String!
+  url: String!
+  video: String!
+}
+
 type Query {
   artists: [Artist]
   artist(id: ID!): Artist
   songs: [Song]
   song(id: ID!): Song
+  shows(limit: Int!, page: Int!): [Show]
 }
 
 type Mutation {
