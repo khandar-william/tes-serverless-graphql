@@ -20,18 +20,14 @@ module.exports.getGolds = function () {
 module.exports.getGoldsOwned = function (minerName) {
   const params = {
     TableName: GoldTableName,
-    AttributesToGet: [
-      'id',
-      'miner_name',
-      'amount',
-    ],
+    ProjectionExpression: 'id, miner_name, amount',
     FilterExpression: 'miner_name = :name',
     ExpressionAttributeValues: {
       ':name': minerName,
     },
   };
-
-  return db.scan(params);
+  console.log('Get Golds Owned by ' + minerName);
+  return minerName ? db.scan(params) : [];
 };
 
 
@@ -54,8 +50,8 @@ module.exports.getMiner = function (name) {
       name: name,
     },
   };
-
-  return db.get(params);
+  console.log('Get Miner ' + name);
+  return name ? db.get(params) : {};
 };
 
 module.exports.createGold = function (minerName, amount) {
