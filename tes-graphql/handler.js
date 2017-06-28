@@ -34,7 +34,32 @@ var makeRequestHandle = function (callback, doSomething) {
   };
 }
 
-// const schema = require('./schema');
+const mime = require('mime');
+// Alternative to S3
+module.exports.assets = (event, context, callback) => {
+  var supposedPath = path.resolve(__dirname, 'assets/' + event.pathParameters.location);
+  console.log('Path is ' + supposedPath);
+
+  if (fs.existsSync(supposedPath)) {
+    var fileContent = fs.readFileSync(supposedPath, 'utf8');
+    var response = {
+      statusCode: 200,
+      headers: {
+        'Content-Type': mime.lookup(supposedPath),
+      },
+      body: fileContent,
+    };
+  } else {
+    var response = {
+      statusCode: 404,
+      headers: {
+        'Content-Type': 'text/html',
+      },
+      body: '<h1>FILE NOT FOUND</h1>',
+    };
+  }
+  callback(null, response);
+};
 
 const makeExecutableSchema = require('graphql-tools').makeExecutableSchema;
 const typeDefs = fs.readFileSync(path.resolve(__dirname, 'schema.graphql'), 'utf-8');

@@ -24,6 +24,16 @@ package:
     - .git/**
 
 functions:
+  assets:
+    handler: handler.assets
+    events:
+      - http:
+          path: assets/{location+}
+          method: get
+          request:
+            parameters:
+              paths:
+                location: true
   graphql:
     handler: handler.graphql
     events:
@@ -54,6 +64,9 @@ functions:
           path: gold
           method: post
           cors: true
+          authorizer: cekKodeRahasia
+  cekKodeRahasia:
+    handler: gold/handler.cekKodeRahasia
 
 resources:
   Resources:
