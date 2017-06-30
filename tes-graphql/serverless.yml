@@ -16,6 +16,12 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
+        - sns:Publish
+        - sns:Subscribe
+        - sns:Unsubscribe
+        - sns:CreateTopic
+        - sns:DeleteTopic
+        - sns:GetTopicAttributes
       Resource: arn:aws:dynamodb:us-east-1:*:*
 
 package:
@@ -67,6 +73,17 @@ functions:
           authorizer: cekKodeRahasia
   cekKodeRahasia:
     handler: gold/handler.cekKodeRahasia
+  tesPublisher:
+    handler: micro/handler.tesPublisher
+    events:
+      - http:
+          path: tesPublisher
+          method: get
+  tesSubscriber:
+    handler: micro/handler.tesSubscriber
+    events:
+      # - sns: CANTSEEMEANYMORE
+      - sns: arn:aws:sns:us-east-1:840833276718:NOWYOUSEEME
 
 resources:
   Resources:
